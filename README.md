@@ -24,8 +24,6 @@ git cloneコマンドで本Repositoryを任意のディレクトリ配下にclon
 BASE_IMAGE_TAG = ${ImageTag}
 ```
 
-<br>
-
 ## 実行ユーザー名の設定
 [.env](./.env)内の`USER_NAME`にコンテナ起動後の実行ユーザーを設定する。
 
@@ -38,7 +36,7 @@ USER_NAME = ${実行ユーザー名}
 # Usage
 
 ## コンテナ実行
-本Repository直下([docker-compose.yml](./docker-compose.yml)が存在するディレクトリ)で以下のコマンドを実行する。
+本Repository直下[docker-compose.yml](./docker-compose.yml)が存在するディレクトリで以下のコマンドを実行する。
 
 ```bash
 ./docker_image_register.sh
