@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  bastion:
+    image: tmp-bastion
+    container_name: bastion
+    build:
+      context: ./bastion
+      dockerfile: Dockerfile
+      args:
+        - BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
+        - USER_NAME=${USER_NAME}
+    ports:
+      - 22:22
+    user: ${USER_NAME}
+    stdin_open: true
