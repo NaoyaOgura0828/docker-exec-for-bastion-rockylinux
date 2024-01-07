@@ -30,6 +30,75 @@ setup_authorized_keys() {
 
 }
 
+# Register PublicIP to Bastion Domain
+register_public_ip_to_bastion_domain() {
+    PUBLIC_IP=$(curl http://checkip.amazonaws.com/)
+
+    BASTION_DOMAIN_ID=$(
+        aws route53 list-hosted-zones-by-name \
+            --dns-name bastion.${PARENT_NAKED_DOMAIN} \
+            --query "HostedZones[0].Id" \
+            --output text |
+            awk -F'/' '{print $3}'
+    )
+
+    IS_BASTION_DOMAIN_A_RECORD_SET=$(
+        aws route53 list-resource-record-sets \
+            --hosted-zone-id ${BASTION_DOMAIN_ID} \
+            --query "ResourceRecordSets[?Type=='A']" \
+            --output text |
+            wc -w
+    )
+
+    if [ ${IS_BASTION_DOMAIN_A_RECORD_SET} != 0 ]; then
+        aws route53 change-resource-record-sets \
+            --hosted-zone-id ${BASTION_DOMAIN_ID} \
+            --change-batch \
+            "{
+                \"Changes\": [
+                    {
+                        \"Action\": \"UPSERT\",
+                        \"ResourceRecordSet\": {
+                            \"Name\": \"bastion.${PARENT_NAKED_DOMAIN}\",
+                            \"Type\": \"A\",
+                            \"TTL\": 300,
+                            \"ResourceRecords\": [
+                                {
+                                    \"Value\": \"${PUBLIC_IP}\"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }" > /dev/null
+
+    else
+        aws route53 change-resource-record-sets \
+            --hosted-zone-id ${BASTION_DOMAIN_ID} \
+            --change-batch \
+            "{
+                \"Changes\": [
+                    {
+                        \"Action\": \"CREATE\",
+                        \"ResourceRecordSet\": {
+                            \"Name\": \"bastion.${PARENT_NAKED_DOMAIN}\",
+                            \"Type\": \"A\",
+                            \"TTL\": 300,
+                            \"ResourceRecords\": [
+                                {
+                                    \"Value\": \"${PUBLIC_IP}\"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }" > /dev/null
+
+    fi
+
+}
+
 setup_authorized_keys ${SYSTEM_NAME}-${ENV_TYPE}-keypair
+register_public_ip_to_bastion_domain
 
 tail -f /dev/null

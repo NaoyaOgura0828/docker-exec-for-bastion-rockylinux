@@ -32,10 +32,6 @@ RUN adduser ${USER_NAME} --badname
 RUN echo "${USER_NAME} ALL=NOPASSWD: ALL" >> /etc/sudoers
 
 # Replace sshd_config
-COPY ./sshd_config /etc/ssh/sshd_config
-# RUN chown root:root /etc/ssh/sshd_config &&\
-#     chmod 600 /etc/ssh/sshd_config &&\
-#     systemctl start sshd
 RUN chown root:root /etc/ssh/sshd_config &&\
     chmod 600 /etc/ssh/sshd_config
 
