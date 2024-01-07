@@ -36,10 +36,14 @@ USER_NAME = ${実行ユーザー名}
 # Usage
 
 ## コンテナ実行
-本Repository直下[docker-compose.yml](./docker-compose.yml)が存在するディレクトリで以下のコマンドを実行する。
+本Repository直下[docker_image_register.sh](./docker_image_register.sh)が存在するディレクトリで以下のコマンドを実行する。
 
 ```bash
 ./docker_image_register.sh
 ```
+
+> [!NOTE]
+> [ecs-bastion-cloudformation](https://github.com/NaoyaOgura0828/template-cloudformation/tree/main/ecs-bastion-cloudformation)を利用した環境構築を前提としている。<br>
+> [ecs-bastion-cloudformation](https://github.com/NaoyaOgura0828/template-cloudformation/tree/main/ecs-bastion-cloudformation)を利用しない場合は、`bastion`という名称でECRにRepositoryを構築すること。
 
 <br>
