@@ -142,8 +142,24 @@ register_public_ip_to_bastion_domain() {
 
 }
 
+# Delete Admin User
+delete_admin_user() {
+    if [ ${IS_DELETE_ADMIN_USER} = true ]; then
+        (
+            sleep 60
+            CURRENT_USER=$(whoami)
+            sudo userdel -r ${CURRENT_USER}
+        ) &
+        echo "Delete the admin user after 60 seconds."
+    else
+        echo "IS_DELETE_ADMIN_USER: false."
+    fi
+
+}
+
 create_users
 setup_authorized_keys ${SYSTEM_NAME}-${ENV_TYPE}-keypair
 register_public_ip_to_bastion_domain
+delete_admin_user
 
 tail -f /dev/null
