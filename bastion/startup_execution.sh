@@ -1,8 +1,35 @@
 #!/bin/bash
 
+# Create Users
+create_users() {
+    USER_LIST="${CREATE_USER_LIST}"
+
+    if [ -z "${USER_LIST}" ]; then
+        echo "User list is empty."
+    fi
+
+    IFS=', '
+    for user_name in ${USER_LIST}; do
+        if ! id ${user_name} &> /dev/null; then
+            sudo adduser ${user_name} --badname
+            sudo cp ~/.bashrc /home/${user_name}/.bashrc
+            echo "User name ${user_name} is created."
+
+        else
+            echo "User name ${user_name} is already exists."
+
+        fi
+    done
+
+    unset IFS
+
+}
+
 # Setup authorized_keys
 setup_authorized_keys() {
     KEY_PAIR_NAME=$1
+
+    USER_LIST="${CREATE_USER_LIST}"
 
     KEY_PAIR_ID=$(aws ec2 describe-key-pairs \
         --filters Name=key-name,Values=${KEY_PAIR_NAME} \
@@ -23,10 +50,27 @@ setup_authorized_keys() {
 
     chmod 600 ~/.ssh/authorized_keys
 
-    rm id_rsa.pem
-    rm id_rsa.pub
+    if [ -z "${USER_LIST}" ]; then
+        echo "User list is empty."
+    fi
+
+    IFS=', '
+    for user_name in ${USER_LIST}; do
+        sudo mkdir /home/${user_name}/.ssh
+        sudo chmod 700 /home/${user_name}/.ssh
+        sudo chown ${user_name}:${user_name} /home/${user_name}/.ssh
+        sudo cp ~/.ssh/authorized_keys /home/${user_name}/.ssh/authorized_keys
+        sudo chown ${user_name}:${user_name} /home/${user_name}/.ssh/authorized_keys
+        echo "Setup done authorized_keys for ${user_name}."
+
+    done
+
+    unset IFS
 
     sudo /usr/sbin/sshd
+
+    rm id_rsa.pem
+    rm id_rsa.pub
 
 }
 
@@ -98,6 +142,7 @@ register_public_ip_to_bastion_domain() {
 
 }
 
+create_users
 setup_authorized_keys ${SYSTEM_NAME}-${ENV_TYPE}-keypair
 register_public_ip_to_bastion_domain
 
