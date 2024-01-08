@@ -13,10 +13,9 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezo
 RUN dnf update -y
 
 # Install Packages
-RUN dnf install openssh-server -y &&\
+RUN dnf install git -y &&\
+    dnf install openssh-server -y &&\
     dnf install sudo -y &&\
-    dnf install systemd -y &&\
-    dnf install git -y &&\
     dnf install unzip -y
 
 # Install awscliv2
