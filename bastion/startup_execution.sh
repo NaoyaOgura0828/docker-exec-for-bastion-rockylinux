@@ -27,7 +27,6 @@ create_users() {
 
 # Setup authorized_keys
 setup_authorized_keys() {
-    KEY_PAIR_NAME=$1
 
     USER_LIST="${CREATE_USER_LIST}"
 
@@ -158,7 +157,7 @@ delete_admin_user() {
 }
 
 create_users
-setup_authorized_keys ${SYSTEM_NAME}-${ENV_TYPE}-keypair
+setup_authorized_keys
 register_public_ip_to_bastion_domain
 delete_admin_user
 
