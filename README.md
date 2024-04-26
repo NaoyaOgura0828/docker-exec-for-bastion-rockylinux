@@ -43,7 +43,7 @@ USER_NAME = ${実行ユーザー名}
 ```
 
 > [!NOTE]
-> [ecs-bastion-cloudformation](https://github.com/NaoyaOgura0828/template-cloudformation/tree/main/ecs-bastion-cloudformation)を利用した環境構築を前提としている。<br>
-> [ecs-bastion-cloudformation](https://github.com/NaoyaOgura0828/template-cloudformation/tree/main/ecs-bastion-cloudformation)を利用しない場合は、`bastion`という名称でECRにRepositoryを構築すること。
+> [cloudformation-ecs-bastion](https://github.com/NaoyaOgura0828/cloudformation-templates/tree/main/cloudformation-ecs-bastion)を利用した環境構築を前提としている。<br>
+> [cloudformation-ecs-bastion](https://github.com/NaoyaOgura0828/cloudformation-templates/tree/main/cloudformation-ecs-bastion)を利用しない場合は、`bastion`という名称でECRにRepositoryを構築すること。
 
 <br>
